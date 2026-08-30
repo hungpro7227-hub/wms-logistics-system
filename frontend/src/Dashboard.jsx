@@ -1,6 +1,6 @@
 function Dashboard() {
   return (
-    <div className="dashboard">
+    <div className="dashboard dashboard--responsive">
       <h1>Kho vận Dashboard</h1>
       <p>Tổng số sản phẩm tồn kho: 100</p>
     </div>

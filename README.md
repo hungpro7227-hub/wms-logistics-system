@@ -1,1 +1,1 @@
-# WMS Logistics System
+WMS Logistics System - Phát triển bởi Team Frontend (Đính)

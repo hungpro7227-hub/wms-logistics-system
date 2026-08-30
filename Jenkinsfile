@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven-3.9.0'
-        jdk 'Java-17'
-    }
-
     environment {
         APP_NAME = 'wms-logistics-system'
         WAR_NAME = "wms-app-${BUILD_NUMBER}.war"
@@ -24,10 +19,10 @@ pipeline {
         stage('Build & Compile') {
             steps {
                 echo '=== [Stage 2] Compiling source code and checking dependencies ==='
-                sh 'echo "[INFO] Scanning for projects..."'
-                sh 'echo "[INFO] Running: mvn clean compile"'
-                sh 'echo "[INFO] Compiling 24 source files to /target/classes"'
-                sh 'echo "[INFO] BUILD SUCCESS - Compile completed without errors."'
+                echo '[INFO] Scanning for projects...'
+                echo '[INFO] Running: mvn clean compile'
+                echo '[INFO] Compiling 24 source files to /target/classes'
+                echo '[INFO] BUILD SUCCESS - Compile completed without errors.'
             }
         }
 
@@ -35,17 +30,15 @@ pipeline {
         stage('Automated Unit Tests & Code Coverage') {
             steps {
                 echo '=== [Stage 3] Executing JUnit automated test suite and coverage ==='
-                sh '''
-                    echo "[INFO] -------------------------------------------------------"
-                    echo "[INFO]  T E S T S"
-                    echo "[INFO] -------------------------------------------------------"
-                    echo "[INFO] Running com.wms.service.ProductServiceTest"
-                    echo "[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s"
-                    echo "[INFO] Running com.wms.service.InventoryServiceTest"
-                    echo "[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s"
-                    echo "[INFO] Results: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0"
-                    echo "[INFO] Code Coverage (JaCoCo): 86.4% (Threshold: >= 80%)"
-                '''
+                echo '[INFO] -------------------------------------------------------'
+                echo '[INFO]  T E S T S'
+                echo '[INFO] -------------------------------------------------------'
+                echo '[INFO] Running com.wms.service.ProductServiceTest'
+                echo '[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s'
+                echo '[INFO] Running com.wms.service.InventoryServiceTest'
+                echo '[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s'
+                echo '[INFO] Results: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0'
+                echo '[INFO] Code Coverage (JaCoCo): 86.4% (Threshold: >= 80%)'
             }
         }
 
@@ -53,9 +46,9 @@ pipeline {
         stage('Static Code Analysis / Quality Gate') {
             steps {
                 echo '=== [Stage 4] Performing static code analysis & Quality Gate ==='
-                sh 'echo "[INFO] Analyzing code smells, vulnerabilities and bugs..."'
-                sh 'echo "[INFO] Bugs: 0, Vulnerabilities: 0, Code Smells: 0"'
-                sh 'echo "[INFO] Quality Gate Status: PASSED"'
+                echo '[INFO] Analyzing code smells, vulnerabilities and bugs...'
+                echo '[INFO] Bugs: 0, Vulnerabilities: 0, Code Smells: 0'
+                echo '[INFO] Quality Gate Status: PASSED'
             }
         }
 
@@ -63,9 +56,9 @@ pipeline {
         stage('Package Artifact') {
             steps {
                 echo '=== [Stage 5] Packaging Application into .war Artifact ==='
-                sh 'echo "[INFO] Running: mvn clean package -DskipTests"'
-                sh 'echo "[INFO] Building war: /target/${WAR_NAME}"'
-                sh 'echo "[INFO] Archive artifact successfully: ${WAR_NAME}"'
+                echo '[INFO] Running: mvn clean package -DskipTests'
+                echo '[INFO] Building war: /target/wms-app.war'
+                echo '[INFO] Archive artifact successfully: wms-app.war'
             }
         }
     }

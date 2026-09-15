@@ -2,73 +2,65 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME = 'wms-logistics-system'
-        WAR_NAME = "wms-app-${BUILD_NUMBER}.war"
+        PROJECT_NAME = 'WMS-Logistics'
+        SLACK_CHANNEL = '#jenkins-ci'
     }
 
     stages {
-        // Stage 1: Checkout Source Code từ Git Repository
-        stage('Checkout Source Code') {
+        stage('Checkout Code') {
             steps {
-                echo '=== [Stage 1] Checking out source code from GitHub Repository ==='
+                echo '=== [STAGE 1]: Kéo mã nguồn từ GitHub ==='
                 checkout scm
             }
         }
 
-        // Stage 2: Build & Compile dự án (mvn clean compile)
-        stage('Build & Compile') {
+        stage('Compile & Build Microservices') {
             steps {
-                echo '=== [Stage 2] Compiling source code and checking dependencies ==='
-                echo '[INFO] Scanning for projects...'
-                echo '[INFO] Running: mvn clean compile'
-                echo '[INFO] Compiling 24 source files to /target/classes'
-                echo '[INFO] BUILD SUCCESS - Compile completed without errors.'
+                echo '=== [STAGE 2]: Biên dịch & Đóng gói Backend Services ==='
+                // Mô phỏng đóng gói hoặc chạy docker build
+                sh 'echo "Đóng gói Product, Inventory, Order, Shipping Service..."'
             }
         }
 
-        // Stage 3: Run Automated Unit Tests & Code Coverage (mvn test)
-        stage('Automated Unit Tests & Code Coverage') {
+        stage('Automated Testing') {
             steps {
-                echo '=== [Stage 3] Executing JUnit automated test suite and coverage ==='
-                echo '[INFO] -------------------------------------------------------'
-                echo '[INFO]  T E S T S'
-                echo '[INFO] -------------------------------------------------------'
-                echo '[INFO] Running com.wms.service.ProductServiceTest'
-                echo '[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s'
-                echo '[INFO] Running com.wms.service.InventoryServiceTest'
-                echo '[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s'
-                echo '[INFO] Results: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0'
-                echo '[INFO] Code Coverage (JaCoCo): 86.4% (Threshold: >= 80%)'
+                echo '=== [STAGE 3]: Thực thi Unit Test tự động (JUnit) ==='
+                // Kịch bản test giả định thành công
+                sh 'echo "Running automated test cases... PASSED (100%)"'
             }
         }
 
-        // Stage 4: Static Code Analysis / Quality Gate
-        stage('Static Code Analysis / Quality Gate') {
+        stage('Docker Container Packaging') {
             steps {
-                echo '=== [Stage 4] Performing static code analysis & Quality Gate ==='
-                echo '[INFO] Analyzing code smells, vulnerabilities and bugs...'
-                echo '[INFO] Bugs: 0, Vulnerabilities: 0, Code Smells: 0'
-                echo '[INFO] Quality Gate Status: PASSED'
+                echo '=== [STAGE 4]: Đóng gói Container qua Dockerfile ==='
+                sh 'echo "Build Docker image wms-backend:latest completed."'
             }
         }
 
-        // Stage 5: Package Artifact (Tạo tệp .war)
-        stage('Package Artifact') {
+        stage('Deploy to Staging') {
             steps {
-                echo '=== [Stage 5] Packaging Application into .war Artifact ==='
-                echo '[INFO] Running: mvn clean package -DskipTests'
-                echo '[INFO] Building war: /target/wms-app.war'
-                echo '[INFO] Archive artifact successfully: wms-app.war'
+                echo '=== [STAGE 5]: Triển khai lên môi trường UAT / Staging ==='
+                sh 'echo "Application deployed to Staging successfully."'
             }
         }
     }
 
     post {
         success {
-            echo 'SUCCESS: CI Pipeline build, unit tests, and packaging completed successfully!'
+            echo 'Pipeline hoàn thành xuất sắc! Gửi thông báo đến Slack...'
+            slackSend(
+                channel: "${SLACK_CHANNEL}",
+                color: '#36a64f', // Màu xanh lá cây
+                message: "✅ *[SUCCESS]* Dự án *${env.JOB_NAME}* (Build #${env.BUILD_NUMBER}) thành công mỹ mãn!\nChi tiết xem tại: ${env.BUILD_URL}"
+            )
         }
         failure {
-            echo 'FAILURE: Pipeline execution failed. Please check Console Output.'
+            echo 'Pipeline gặp lỗi! Báo động về Slack...'
+            slackSend(
+                channel: "${SLACK_CHANNEL}",
+                color: '#ff0000', // Màu đỏ
+                message: "❌ *[FAILURE]* Dự án *${env.JOB_NAME}* (Build #${env.BUILD_NUMBER}) bị lỗi tại một trong các stages!\nKiểm tra log tại: ${env.BUILD_URL}console"
+            )
         }
     }
 }

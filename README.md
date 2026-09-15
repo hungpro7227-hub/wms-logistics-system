@@ -1,1 +1,1 @@
-# WMS Logistics System - Phát triển bởi Team Backend 
+# WMS Logistics System - Phát triển bởi Team Backend - Nhóm 06
